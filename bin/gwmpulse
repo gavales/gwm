@@ -4,7 +4,7 @@
 FREQ=${FREQ:-0.05}
 COLORS="$(cat $HOME/.config/gwm/bin/pulsecolors | sed '/^#/d')"
 echo $COLORS
-
+BRDR="$(gwmget BORDER)"
 while :; do
 	for c in $COLORS; do
 		chwb -s $(gwmget BORDER) -c ${c} $(pfw)
