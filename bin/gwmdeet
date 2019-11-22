@@ -46,9 +46,13 @@ eval "$(xprop -id ${@:-} | awk -F '=' '
 		}' | \
 	sed 's/=/="/g;s/$/"/g')"
 
+CLASS="$(echo    $CLASS    | tr -d '\040\011\012\015')"
+INSTANCE="$(echo $INSTANCE | tr -d '\040\011\012\015')"
+NAME="$(echo     $NAME     | tr -d '\040\011\012\015')"
+
 FSTR=
-[[ -n $O_class ]] && FSTR+="$CLASS "
-[[ -n $O_instance ]] && FSTR+="$INSTANCE "
-[[ -n $O_name ]] && FSTR+="$NAME "
+[[ -n $O_class ]] && FSTR+="$CLASS"
+[[ -n $O_instance ]] && FSTR+="\n$INSTANCE"
+[[ -n $O_name ]] && FSTR+="\n$NAME"
 
 echo $FSTR

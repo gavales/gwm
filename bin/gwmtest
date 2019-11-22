@@ -2,12 +2,51 @@
 
 [[ -z $1 ]] && echo "gwmtest <WID>" && exit
 WID=${1}
-PSTN=add
+PSTN=stack
 DEFSTACK="$(gwmget SBARSTACK)default"
-eval "$(wattr wh ${WID} | awk '{print  "W=" $1  "\nH=" $2}')"
-eval "$(cat ${DEFSTACK} | awk '{print "SW=" $1 "\nSH=" $2}')"
+eval "$(wattr wh ${WID} | awk '{print  "W="$1  "\nH="$2}')"
+eval "$(cat ${DEFSTACK} | awk '{print "SW="$1 "\nSH="$2}')"
 
-((W>SW)) && PSTN=main
-((H>SH)) && PSTN=main
+#((W>SW)) && PSTN=major
+#((H>SH)) && PSTN=major
+
+NME="$(gwmdeet n $WID)"
+INS="$(gwmdeet i $WID)"
+CLS="$(gwmdeet c $WID)"
+
+#$fw [window_role="pop-up"]               focus; $QUD -m 1; focus
+#$fw [window_role="GtkFileChooserDialog"] focus;$QUD -m 2;focus
+
+case "$NME" in
+	*GoogleChrome) PSTN=major ;;
+	*EDTR*)        PSTN=major ;;
+	DOOTS)         PSTN=major ;;
+	*MyMovies*)    PSTN=focus ;;
+	*watchseries*) PSTN=focus ;;
+	*YouTube)      PSTN=focus ;;
+	BBCiPlayer)    PSTN=focus ;;
+	Netflix)       PSTN=focus ;;
+	Funimation*)   PSTN=focus ;;
+	*PrimeVideo*)  PSTN=focus ;;
+esac
+
+case "$INS" in
+	ncmpcpp) PSTN=focus ;;
+esac
+
+case "$CLS" in
+	Emacs)         PSTN=major ;;
+	firefox)       PSTN=major ;;
+	Firefox)       PSTN=major ;;
+	Gvim)          PSTN=major ;;
+	Pamac-manager) PSTN=major ;;
+	Slack)         PSTN=major ;;
+	qutebrowser)   PSTN=major ;;
+	MPlayer) PSTN=focus ;;
+	mpv)     PSTN=focus ;;
+	feh)     PSTN=focus ;;
+	Sxiv)    PSTN=focus ;;
+	Spotify) PSTN=focus ;;
+esac
 
 echo $PSTN
