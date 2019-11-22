@@ -25,45 +25,41 @@ TOPPAD="$(gwmget TOPPAD)"
 LEFTPAD="$(gwmget LEFTPAD)"
 RIGHTPAD="$(gwmget RIGHTPAD)"
 BOTTOMPAD="$(gwmget BOTTOMPAD)"
+CONF="$(gwmget SBARCONF)"
+eval "$(mattr wh $(pfm) | awk '{print "SCRW="$1 "\nSCRH="$2}')"
+DWW=$((SCRW - 2*GAP - LEFTPAD - RIGHTPAD))
+DWH=$((SCRH - 2*GAP - TOPPAD - BOTTOMPAD))
+DWX=$((SCRW/2 - DWW/2))
+DWY=$((SCRH/2 - DWH/2))
 
-eval "$(mattr wh $(pfm) | awk '{ print "SCRW="$1 "\nSCRH="$2 }')"
-
-STACK="$(gwmget SBARSTACK)" CURSTACK="${STACK}current" DEFSTACK="${STACK}default"
-FOCUS="$(gwmget SBARFOCUS)" CURFOCUS="${FOCUS}current" DEFFOCUS="${FOCUS}default"
-MAJOR="$(gwmget SBARMAJOR)" CURMAJOR="${MAJOR}current" DEFMAJOR="${MAJOR}default"
-MINOR="$(gwmget SBARMINOR)" CURMINOR="${MINOR}current" DEFMINOR="${MINOR}default"
+STACK="$(gwmget SBARSTACK)" CURSTACK="${STACK}current"
+FOCUS="$(gwmget SBARFOCUS)" CURFOCUS="${FOCUS}current"
+MAJOR="$(gwmget SBARMAJOR)" CURMAJOR="${MAJOR}current"
+MINOR="$(gwmget SBARMINOR)" CURMINOR="${MINOR}current"
 
 DSW=540 DSH=408
 DFW=$DSW DFH=$DSH
-DMW=$((2*DSW)) DMH=$((SCRH - TOPPAD - GAP))
-DmW=$((DMW + GAP + DSW)) DmH=$((DMW - 2*GAP - DFH - DSH))
+DMW=$((DWW - GAP - DSW)) DMH=$((DWH))
+DmW=$((DWW)) DmH=$((DWW - 2*GAP - DFH - DSH))
 
-[[ -s $DEFSTACK ]] && source ${DEFSTACK}
-[[ -s $DEFFOCUS ]] && source ${DEFFOCUS}
-[[ -s $DEFMAJOR ]] && source ${DEFMAJOR}
-[[ -s $DEFMINOR ]] && source ${DEFMINOR}
-
-#DWW=$((SCRW - 2*GAP - LEFTPAD - RIGHTPAD))
-#DWH=$((SCRH - 2*GAP - TOPPAD - BOTTOMPAD))
-#DWX=$((SCRW/2 - DWW/2))
-#DWY=$((SCRH - DMH - GAP))
-DWW=$((DMW + GAP + DSW))
-DWH=$DMH
-DWX=$((SCRW/2 - DWW/2))
-DWY=$((SCRH - DMH - GAP))
+[[ -s $CONF ]] && source $CONF
 
 O_clean () {
 	ID="$1"
+	[[ -n $(grep "${ID}" ${STACK}) ]] && echo "$ID was in STACK"
+	[[ -n $(grep "${ID}" ${FOCUS}) ]] && echo "$ID was in FOCUS"
+	[[ -n $(grep "${ID}" ${MAJOR}) ]] && echo "$ID was in MAJOR"
+
 	sed -i "/${ID}/d" "${STACK}"
 	sed -i "/${ID}/d" "${FOCUS}"
 	sed -i "/${ID}/d" "${MAJOR}"
 }
 O_check_empty () {
-	echo $((SCRW/2 - DSW/2)) $DWY $DSW $DSH > $CURSTACK
+	echo $((SCRW/2 - DSW/2)) $((SCRH/2 - DSH/2)) $DSW $DSH > $CURSTACK
 
 	[[ -s ${FOCUS} ]] && {
-		echo $((SCRW/2 - DFW/2)) $DWY $DFW $DFH > $CURFOCUS
-		echo $((SCRW/2 - DSW/2)) $((DWY + DSH + GAP)) $DSW $DSH > $CURSTACK
+		echo $((SCRW/2 - DFW/2)) $((SCRH/2 - GAP/2 - DFH)) $DFW $DFH > $CURFOCUS
+		echo $((SCRW/2 - DSW/2)) $((SCRH/2 + GAP/2)) $DSW $DSH > $CURSTACK
 	}
 
 	[[ -s ${MAJOR} ]] && {
@@ -78,7 +74,7 @@ O_check_empty () {
 O_restack () {
 	[[ -s $STACK ]] && cat $STACK | xargs -I {} wtp $(cat $CURSTACK) "{}"
 	[[ -s $FOCUS ]] && cat $FOCUS | xargs -I {} wtp $(cat $CURFOCUS) "{}"
-	[[ -s $MAJOR ]]  && cat $MAJOR  | xargs -I {} wtp $(cat $CURMAJOR)  "{}"
+	[[ -s $MAJOR ]] && cat $MAJOR | xargs -I {} wtp $(cat $CURMAJOR) "{}"
 	exit
 }
 O_reset () {
@@ -89,6 +85,7 @@ O_reset () {
 }
 O_stack () {
 	WID=${1}
+	echo "$WID to STACK"
 	lsw | grep -q "$WID" && O_clean "${WID}"
 	echo ${WID} >> $STACK
 
@@ -99,6 +96,7 @@ O_stack () {
 }
 O_focus () {
 	WID=${1}
+	echo "$WID to FOCUS"
 	lsw | grep -q "$WID" && O_clean "${WID}"
 
 	if [[ -s $FOCUS ]]; then
@@ -116,6 +114,7 @@ O_focus () {
 }
 O_major () {
 	WID=${1}
+	echo "$WID to MAJOR"
 	lsw | grep -q "$WID" && O_clean "${WID}"
 
 	echo ${WID} >> $MAJOR
@@ -125,19 +124,19 @@ O_major () {
 	exit
 }
 O_minor () {
-	WID=${1}
-	lsw | grep -q "$WID" && O_clean "${WID}"
-
-	if [[ -s ${MINOR} ]]; then
-		echo "Moving $WID to MINOR"
-		cat ${MINOR} >> $MAJOR
-		echo ${WID} > ${MINOR}
-	else
-		echo ${WID} > ${MINOR}
-	fi
-
-	O_check_empty
-	O_restack
+#	WID=${1}
+#	lsw | grep -q "$WID" && O_clean "${WID}"
+#
+#	if [[ -s ${MINOR} ]]; then
+#		echo "Moving $WID to MINOR"
+#		cat ${MINOR} >> $MAJOR
+#		echo ${WID} > ${MINOR}
+#	else
+#		echo ${WID} > ${MINOR}
+#	fi
+#
+#	O_check_empty
+#	O_restack
 	gwmfocus ${WID}
 	exit
 }

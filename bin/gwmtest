@@ -3,24 +3,53 @@
 [[ -z $1 ]] && echo "gwmtest <WID>" && exit
 WID=${1}
 PSTN=stack
-DEFSTACK="$(gwmget SBARSTACK)default"
+SBARCONF="$(gwmget SBARCONF)"
 eval "$(wattr wh ${WID} | awk '{print  "W="$1  "\nH="$2}')"
-eval "$(cat ${DEFSTACK} | awk '{print "SW="$1 "\nSH="$2}')"
+[[ -s $SBARCONF ]] && source $SBARCONF
 
-#((W>SW)) && PSTN=major
-#((H>SH)) && PSTN=major
+((W>DSW)) && PSTN=major
+((H>DSH)) && PSTN=major
 
 NME="$(gwmdeet n $WID)"
 INS="$(gwmdeet i $WID)"
 CLS="$(gwmdeet c $WID)"
 
-#$fw [window_role="pop-up"]               focus; $QUD -m 1; focus
-#$fw [window_role="GtkFileChooserDialog"] focus;$QUD -m 2;focus
+##$fw [window_role="pop-up"]               focus;$QUD -m 1;focus
+##$fw [window_role="GtkFileChooserDialog"] focus;$QUD -m 2;focus
+
+case "$CLS" in
+	Surf)     PSTN=stack ;;
+	Zathura)  PSTN=stack ;;
+	MuPDF)    PSTN=stack ;;
+	Electron) PSTN=stack ;;
+	Thunar)   PSTN=stack ;;
+	Emacs)            PSTN=major ;;
+	firefox)          PSTN=major ;;
+	Firefox)          PSTN=major ;;
+	Googlechromebeta) PSTN=major ;;
+	Gvim)             PSTN=major ;;
+	Pamacmanager)     PSTN=major ;;
+	Slack)            PSTN=major ;;
+	qutebrowser)      PSTN=major ;;
+	MPlayer) PSTN=focus ;;
+	mpv)     PSTN=focus ;;
+	feh)     PSTN=focus ;;
+	Sxiv)    PSTN=focus ;;
+	Spotify) PSTN=focus ;;
+esac
 
 case "$NME" in
-	*GoogleChrome) PSTN=major ;;
-	*EDTR*)        PSTN=major ;;
-	DOOTS)         PSTN=major ;;
+	*popout*)      PSTN=stack ;;
+	localhost8090) PSTN=stack ;;
+	EDTRYAML)      PSTN=stack ;;
+	EDTRBIB)       PSTN=stack ;;
+	NOTES)         PSTN=stack ;;
+	TODO)          PSTN=stack ;;
+	WATCHLIST)     PSTN=stack ;;
+	SCRT)          PSTN=stack ;;
+	PROJECTS)      PSTN=stack ;;
+	EDTR*) PSTN=major ;;
+	DOOTS) PSTN=major ;;
 	*MyMovies*)    PSTN=focus ;;
 	*watchseries*) PSTN=focus ;;
 	*YouTube)      PSTN=focus ;;
@@ -31,22 +60,16 @@ case "$NME" in
 esac
 
 case "$INS" in
+	newsboat)   PSTN=stack ;;
+	PLAYING)    PSTN=stack ;;
+	calculator) PSTN=stack ;;
+	calendar)   PSTN=stack ;;
+	drive_sync) PSTN=stack ;;
+	references) PSTN=stack ;;
+	bashmount)  PSTN=stack ;;
+	gitcommit)  PSTN=stack ;;
+	reddit)     PSTN=stack ;;
 	ncmpcpp) PSTN=focus ;;
-esac
-
-case "$CLS" in
-	Emacs)         PSTN=major ;;
-	firefox)       PSTN=major ;;
-	Firefox)       PSTN=major ;;
-	Gvim)          PSTN=major ;;
-	Pamac-manager) PSTN=major ;;
-	Slack)         PSTN=major ;;
-	qutebrowser)   PSTN=major ;;
-	MPlayer) PSTN=focus ;;
-	mpv)     PSTN=focus ;;
-	feh)     PSTN=focus ;;
-	Sxiv)    PSTN=focus ;;
-	Spotify) PSTN=focus ;;
 esac
 
 echo $PSTN
