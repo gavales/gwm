@@ -2,7 +2,7 @@
 
 ## Demo
 
-Check out gwmdemo.mp4 above!
+[gwmdemo](gwmdemo.gif)
 
 ## Description
 
@@ -18,6 +18,9 @@ until I can use plain Xorg
 
 `wmutils`  
 not git version, cos that `wew` doesn't register `CREATE` events on my computer
+
+`mmutils`  
+In case I use multiple monitors
 
 ## Install
 
