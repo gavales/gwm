@@ -1,7 +1,31 @@
 #!/usr/bin/env bash
 
-[[ -z $1 ]] && echo "gwmtest <WID>" && exit
-WID=${1}
+help () {
+cat << 'EOB'
+# NAME
+
+__gwmtest__ - Decide which windows should go to which `gwmsbar` stack
+(`stack|focus|major|minor`)
+
+# SYNOPSIS
+
+```
+gwmtest <WID|>
+```
+EOB
+exit
+}
+
+case $1 in
+	0x*) WID=${1:-$(pfw)} ;;
+	--help) help ;;
+	-h) help | sed -n "/^__/,/^$/p;/# SYNOPSIS/,/#/p" | sed 's/__.* - /\t/;/^#/d;/^$/d;s/```//g' && exit ;;
+	--) shift ; break ;;
+	*) break         ;;
+esac
+
+[[ -z $WID ]] && echo "gwmtest <WID>" && exit
+
 PSTN=stack
 SBARCONF="$(gwmget SBARCONF)"
 eval "$(wattr wh ${WID} | awk '{print  "W="$1  "\nH="$2}')"

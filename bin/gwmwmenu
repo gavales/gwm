@@ -4,6 +4,29 @@
 # dmenu wrapper to select windows based on their window title
 # use xprop -id $wid WM_NAME or WM_CLASS for better matching
 
+help () {
+cat << 'EOB'
+# NAME
+
+__gwmwmenu__ - Rofi window menu
+
+# SYNOPSIS
+
+```
+gwmmenu
+gwmmenu --help|-h
+```
+EOB
+exit
+}
+
+case $1 in
+	--help) help ;;
+	-h) help | sed -n "/^__/,/^$/p;/# SYNOPSIS/,/#/p" | sed 's/__.* - /\t/;/^#/d;/^$/d;s/```//g' && exit ;;
+	--) gwmwmenu -h ;;
+	*) gwmwmenu -h ;;
+esac
+
 wid=$(\
 	for wid in $(lsw); do
 		printf '%s\n' "$wid | $(wname $wid)"

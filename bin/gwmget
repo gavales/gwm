@@ -6,16 +6,27 @@
 CFG=$HOME/.config/gwm/config
 
 help () {
-cat << EOB
-get <gwmvariable>
+cat << 'EOB'
+# NAME
+
+__gwmget__ - Get `<variable>` from `~/.config/gwm/config`
+
+# SYNOPSIS
+
+```
+gwmget <variable>
+gwmget --help|-h
+```
+
 EOB
 exit
 }
 
+
 while true; do
 	case $1 in
 		--help ) help ;;
-		-h ) help ; exit ;;
+		-h     ) help | sed -n "/^__/,/^$/p;/# SYNOPSIS/,/#/p" | sed 's/__.* - /\t/;/^#/d;/^$/d;s/```//g' && exit ;;
 		-- ) shift ; break ;;
 		*  ) break         ;;
 	esac
@@ -24,4 +35,4 @@ done
 
 VAR="${@:-}"
 
-cat $CFG | awk -F '=' -v VAR="$VAR" '$1 ~ VAR {print $2}'
+awk -F '=' -v VAR="$VAR" '$1 ~ VAR {print $2}' $CFG

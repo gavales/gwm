@@ -9,7 +9,9 @@
 Window manager using `cwm` + and scripts that utilise `wmutils`.  
 Based on Michael Misch's [hwwm](https://github.com/halfwit/hwwm) which I saw in
 [this video](https://www.youtube.com/watch?v=MSIjqTgtj2c), but made from scratch
-and changed up a bit.
+and changed up a bit.  
+Check out the wiki for more info on configuration and set-up. It's basically
+like any other wmutils controlled set-up.
 
 ## Dependencies
 

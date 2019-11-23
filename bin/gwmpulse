@@ -1,13 +1,50 @@
 #!/usr/bin/env bash
 # make the current window border "pulse" a la xero
 
+help () {
+cat << 'EOB'
+# NAME
+
+__gwmpulse__ - Pulse window border. Uses `BORDER` from `~/.config/gwm/config`
+
+# SYNOPSIS
+
+```
+gwmpulse &
+gwmpulse --help|-h
+```
+
+# EXAMPLES
+
+Pulsing border
+
+[[/images/pulse.gif|pulse]]
+
+Rainbow border
+
+[[/images/rainbow.gif|rainbow]]
+
+EOB
+exit
+}
+
+while true; do
+	case $1 in
+		--help) help ;;
+		-h) help | sed -n "/^__/,/^$/p;/# SYNOPSIS/,/#/p" | sed 's/__.* - /\t/;/^#/d;/^$/d;s/```//g' && exit ;;
+		--) shift ; break ;;
+		*) break         ;;
+	esac
+	shift
+done
+
 FREQ=${FREQ:-0.05}
-COLORS="$(cat $HOME/.config/gwm/bin/pulsecolors | sed '/^#/d')"
+COLORS="$(cat $HOME/.config/gwm/bin/pulsecolors_old | sed '/^#/d')"
 echo $COLORS
 BRDR="$(gwmget BORDER)"
 while :; do
 	for c in $COLORS; do
-		chwb -s $(gwmget BORDER) -c ${c} $(pfw)
+		chwb -s $((BRDR)) -c ${c} $(pfw)
 		sleep $FREQ
 	done
 done

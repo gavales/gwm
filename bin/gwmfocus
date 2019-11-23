@@ -6,7 +6,21 @@
 CUR=$(pfw)
 BR=$(gwmget BORDER)
 
-usage() { echo "usage: $(basename $0) <next|prev|wid>" ; exit 1 ; }
+help () {
+cat << 'EOB'
+# NAME
+
+__gwmfocus__ - Focus windows
+
+# SYNOPSIS
+```
+gwmfocus <mouse|next|prev|WID>
+gwmfocus --help|-h
+```
+
+EOB
+exit
+}
 
 setborder() {
 	ROOT=$(lsw -r)
@@ -21,14 +35,20 @@ setborder() {
 	esac
 }
 
-[[ -z "$1" ]] && usage && exit
 
-case $1 in
-	mouse) WID=$(gwmunder)                                ;;
-	next)  WID=$(lsw | grep -v ${CUR:-" "} | sed '1 p;d') ;;
-	prev)  WID=$(lsw | grep -v ${CUR:-" "} | sed '$ p;d') ;;
-	0x*)   wattr $1 && WID=$1                             ;;
-esac
+while true; do
+	case $1 in
+		mouse) WID=$(gwmunder)                                ;;
+		next)  WID=$(lsw | grep -v ${CUR:-" "} | sed '1 p;d') ;;
+		prev)  WID=$(lsw | grep -v ${CUR:-" "} | sed '$ p;d') ;;
+		0x*)   wattr $1 && WID=$1                             ;;
+		--help) help ;;
+		-h) help | sed -n "/^__/,/^$/p;/# SYNOPSIS/,/#/p" | sed 's/__.* - /\t/;/^#/d;/^$/d;s/```//g' && exit ;;
+		--) shift ; break ;;
+		* ) break         ;;
+	esac
+	shift
+done
 
 # exit if we can't find another window to focus
 [[ -z "$WID" ]] && echo "No window to focus" && exit

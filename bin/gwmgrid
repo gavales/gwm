@@ -1,11 +1,29 @@
 #!/usr/bin/env bash
 
-
 help () {
 cat << 'EOB'
-Usage:        gwmgrid <tl|tr|bl|br|md> <WID|>
-Descripttion: Snap window <WID> to corners <tl|tr|bl|br>
-              or middle <md> of screen
+# NAME
+
+__gwmgrid__ - Snap window to different parts of the screen.
+The screen is divided into a 3x3 grid
+
+# SYNOPSIS
+
+```
+gwmgrid <tl|tr|bl|br|md> <WID|>
+```
+
+# DESCRIPTION
+
+Snap window `<WID>` to parts of grid `<ml|mm|mr|tl|tm|tr|bl|bm|br>`
+
+| tl  | tm  | tr  |
+| --- | --- | --- |
+| ml  | mm  | mr  |
+| bl  | bm  | br  |
+
+or middle `<md>` of screen, with its original dimensions
+
 EOB
 exit
 }
@@ -13,31 +31,32 @@ exit
 GAP=$(gwmget GAP)
 CUR=${2:-$(pfw)}
 [[ -z $CUR ]] && exit
-ROOT=$(lsw -r)
-SW=$(wattr w $ROOT)
-SH=$(wattr h $ROOT)
-SX=$(wattr x $ROOT)
-SY=$(wattr y $ROOT)
-
-BW=$(wattr b $CUR)
-W=$(wattr w $CUR)
-H=$(wattr h $CUR)
-
-X="$SX"
-Y="$SY"
+ROOT=$(pfm)
+eval "$(mattr xywh $ROOT | awk '{print "SX="$1 "\nSY="$2 "\nSW="$3 "\nSH="$4 }')"
+eval "$(wattr xywh $CUR  | awk '{print "CX="$1 "\nCY="$2 "\nCW="$3 "\nCH="$4 }')"
+WW=$((SW - 2*GAP)) ; WH=$((SH - 2*GAP))
+AW=$((WW - 2*GAP)) ; AH=$((WH - 2*GAP))
+DW=$((AW/3))       ; DH=$((AH/3))
+WX=$((SX + GAP))   ; WY=$((SY + GAP))
+X=$((SW/2 - CW/2)) ; Y=$((SH/2 - CH/2))
 
 [[ -z $1 ]] && help
 
 case $1 in
-	tl) X=$((X + GAP))                  ; Y=$((Y + GAP*2)) ;;
-	tr) X=$((SX + SW - W - BW*2 - GAP)) ; Y=$((Y + GAP*2)) ;;
-	bl) X=$((X + GAP))                  ; Y=$((SY + SH - H - BW*2 - GAP)) ;;
-	br) X=$((SX + SW - W - BW*2 - GAP)) ; Y=$((SY + SH - H - BW*2 - GAP)) ;;
-	md)
-		X=$((SX + SW/2 - W/2 - BW))
-		Y=$((SY + SH/2 - H/2 - BW))
-		test "$Y" -lt $((GAP*2)) && Y=$((GAP*2))
-		;;
+	tl) X=$WX                    ; Y=$WY ;;
+	tm) X=$((WX + DW + GAP))     ; Y=$WY ;;
+	tr) X=$((WX + 2*DW + 2*GAP)) ; Y=$WY ;;
+	ml) X=$WX                    ; Y=$((WY + DH + GAP)) ;;
+	mm) X=$((WX + DW + GAP))     ; Y=$((WY + DH + GAP)) ;;
+	mr) X=$((WX + 2*DW + 2*GAP)) ; Y=$((WY + DH + GAP)) ;;
+	bl) X=$WX                    ; Y=$((WY + 2*DH + 2*GAP)) ;;
+	bm) X=$((WX + DW + GAP))     ; Y=$((WY + 2*DH + 2*GAP)) ;;
+	br) X=$((WX + 2*DW + 2*GAP)) ; Y=$((WY + 2*DH + 2*GAP)) ;;
+	md) X=$((SW/2 - CW/2))       ; Y=$((SH/2 - CH/2)) ;;
+	--help ) help ;;
+	-h ) help | sed -n "/^__/,/^$/p;/# SYNOPSIS/,/#/p" | sed 's/__.* - /\t/;/^#/d;/^$/d;s/```//g' && exit ;;
+	-- ) gwmgrid -h ;;
+	*  ) gwmgrid -h ;;
 esac
 
 wtp $X $Y $W $H $CUR

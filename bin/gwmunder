@@ -1,6 +1,25 @@
 #!/usr/bin/env bash
 # print window id directly underneath mouse
 
+help () {
+cat << 'EOB'
+# NAME
+
+__gwmunder__ - print the WID of the window below the cursor
+EOB
+exit
+}
+
+while true; do
+	case $1 in
+		--help) help ;;
+		-h) help | sed -n "/^__/,/^$/p;/# SYNOPSIS/,/#/p" | sed 's/__.* - /\t/;/^#/d;/^$/d;s/```//g' && exit ;;
+		--) shift ; break ;;
+		*) break         ;;
+	esac
+	shift
+done
+
 intCheck() {
 	[[  $1 != 0 ]] 2> /dev/null
 	[[  $? != 2 ]] || return 1

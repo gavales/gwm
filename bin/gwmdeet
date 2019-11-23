@@ -2,7 +2,7 @@
 
 help () {
 BSE=$(basename $0)
-cat << EOB
+cat << 'EOB'
 # NAME
 
 __gwmdeet__ - get name, instance, class from window id
