@@ -2,7 +2,7 @@
 
 ## Demo
 
-[gwmdemo](gwmdemo.gif)
+![gwmdemo](gwmdemo.gif)
 
 ## Description
 
