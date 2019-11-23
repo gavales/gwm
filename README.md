@@ -2,7 +2,7 @@
 
 ## Demo
 
-![gwmdemo](gwmdemo.gif)
+Check out gwmdemo.mp4 above!
 
 ## Description
 
