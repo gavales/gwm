@@ -14,6 +14,7 @@ gwmrel --stop|-s
 gwmrel --start|-S
 gwmrel --help|-h
 ```
+
 EOB
 exit
 }

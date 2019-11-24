@@ -22,7 +22,6 @@ EOB
 exit
 }
 
-
 while true; do
 	case $1 in
 		--help ) help ;;
@@ -35,4 +34,5 @@ done
 
 VAR="${@:-}"
 
+[[ -z $(grep "$VAR" $CFG) ]] && echo "\"$VAR\" not set" && exit
 awk -F '=' -v VAR="$VAR" '$1 ~ VAR {print $2}' $CFG

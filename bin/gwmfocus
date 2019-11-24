@@ -13,6 +13,7 @@ cat << 'EOB'
 __gwmfocus__ - Focus windows
 
 # SYNOPSIS
+
 ```
 gwmfocus <mouse|next|prev|WID>
 gwmfocus --help|-h

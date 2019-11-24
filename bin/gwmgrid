@@ -10,12 +10,13 @@ The screen is divided into a 3x3 grid
 # SYNOPSIS
 
 ```
-gwmgrid <tl|tr|bl|br|md> <WID|>
+gwmgrid <ml|mm|mr|tl|tm|tr|bl|bm|br> <WID|>
 ```
 
 # DESCRIPTION
 
-Snap window `<WID>` to parts of grid `<ml|mm|mr|tl|tm|tr|bl|bm|br>`
+Snap window `<WID>` to parts of grid
+`<ml|mm|mr|tl|tm|tr|bl|bm|br>`
 
 | tl  | tm  | tr  |
 | --- | --- | --- |
@@ -32,8 +33,10 @@ GAP=$(gwmget GAP)
 CUR=${2:-$(pfw)}
 [[ -z $CUR ]] && exit
 ROOT=$(pfm)
-eval "$(mattr xywh $ROOT | awk '{print "SX="$1 "\nSY="$2 "\nSW="$3 "\nSH="$4 }')"
-eval "$(wattr xywh $CUR  | awk '{print "CX="$1 "\nCY="$2 "\nCW="$3 "\nCH="$4 }')"
+eval "$(mattr xywh $ROOT | \
+	awk '{print "SX="$1 "\nSY="$2 "\nSW="$3 "\nSH="$4}')"
+eval "$(wattr xywh $CUR  | \
+	awk '{print "CX="$1 "\nCY="$2 "\nCW="$3 "\nCH="$4}')"
 WW=$((SW - 2*GAP)) ; WH=$((SH - 2*GAP))
 AW=$((WW - 2*GAP)) ; AH=$((WH - 2*GAP))
 DW=$((AW/3))       ; DH=$((AH/3))
