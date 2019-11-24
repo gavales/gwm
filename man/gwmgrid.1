@@ -1,0 +1,46 @@
+.TH GWMGRID 1 2019\-11\-24 Linux "User Manuals"
+.hy
+.SH NAME
+.PP
+\f[B]gwmgrid\f[R] - Snap window to different parts of the screen.
+The screen is divided into a 3x3 grid
+.SH SYNOPSIS
+.IP
+.nf
+\f[B]
+gwmgrid \fI<ml|mm|mr|tl|tm|tr|bl|bm|br>\fP \fI<WID|>\fP
+\f[R]
+.fi
+.SH DESCRIPTION
+.PP
+Snap window \f[B]\fI<WID>\fP\f[R] to parts of grid
+\f[B]\fI<ml|mm|mr|tl|tm|tr|bl|bm|br>\fP\f[R]
+.PP
+.TS
+tab(@);
+l l l.
+T{
+tl
+T}@T{
+tm
+T}@T{
+tr
+T}
+_
+T{
+ml
+T}@T{
+mm
+T}@T{
+mr
+T}
+T{
+bl
+T}@T{
+bm
+T}@T{
+br
+T}
+.TE
+.PP
+or middle \f[B]\fI<md>\fP\f[R] of screen, with its original dimensions
