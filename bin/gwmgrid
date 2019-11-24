@@ -43,16 +43,16 @@ X=$((SW/2 - CW/2)) ; Y=$((SH/2 - CH/2))
 [[ -z $1 ]] && help
 
 case $1 in
-	tl) X=$WX                    ; Y=$WY ;;
-	tm) X=$((WX + DW + GAP))     ; Y=$WY ;;
-	tr) X=$((WX + 2*DW + 2*GAP)) ; Y=$WY ;;
-	ml) X=$WX                    ; Y=$((WY + DH + GAP)) ;;
-	mm) X=$((WX + DW + GAP))     ; Y=$((WY + DH + GAP)) ;;
-	mr) X=$((WX + 2*DW + 2*GAP)) ; Y=$((WY + DH + GAP)) ;;
-	bl) X=$WX                    ; Y=$((WY + 2*DH + 2*GAP)) ;;
-	bm) X=$((WX + DW + GAP))     ; Y=$((WY + 2*DH + 2*GAP)) ;;
-	br) X=$((WX + 2*DW + 2*GAP)) ; Y=$((WY + 2*DH + 2*GAP)) ;;
-	md) X=$((SW/2 - CW/2))       ; Y=$((SH/2 - CH/2)) ;;
+	tl) X=$WX                    ; Y=$WY ; W=$DW ; H=$DH ;;
+	tm) X=$((WX + DW + GAP))     ; Y=$WY ; W=$DW ; H=$DH ;;
+	tr) X=$((WX + 2*DW + 2*GAP)) ; Y=$WY ; W=$DW ; H=$DH ;;
+	ml) X=$WX                    ; Y=$((WY + DH + GAP)) ; W=$DW ; H=$DH ;;
+	mm) X=$((WX + DW + GAP))     ; Y=$((WY + DH + GAP)) ; W=$DW ; H=$DH ;;
+	mr) X=$((WX + 2*DW + 2*GAP)) ; Y=$((WY + DH + GAP)) ; W=$DW ; H=$DH ;;
+	bl) X=$WX                    ; Y=$((WY + 2*DH + 2*GAP)) ; W=$DW ; H=$DH ;;
+	bm) X=$((WX + DW + GAP))     ; Y=$((WY + 2*DH + 2*GAP)) ; W=$DW ; H=$DH ;;
+	br) X=$((WX + 2*DW + 2*GAP)) ; Y=$((WY + 2*DH + 2*GAP)) ; W=$DW ; H=$DH ;;
+	md) X=$((SW/2 - CW/2))       ; Y=$((SH/2 - CH/2)) ; W=$CW ; H=$CH ;;
 	--help ) help ;;
 	-h ) help | sed -n "/^__/,/^$/p;/# SYNOPSIS/,/#/p" | sed 's/__.* - /\t/;/^#/d;/^$/d;s/```//g' && exit ;;
 	-- ) gwmgrid -h ;;
