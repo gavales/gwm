@@ -2,3 +2,5 @@
 # To run after applying theme
 
 cp .themer/${1}/pulsecolors bin/pulsecolors
+cp .themer/${1}/pulsecolors_old bin/pulsecolors_old
+gwmrel --toggle
