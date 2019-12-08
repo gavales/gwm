@@ -56,12 +56,10 @@ O_clean () {
 }
 O_check_empty () {
 	echo $((SCRW/2 - DSW/2)) $((SCRH/2 - DSH/2)) $DSW $DSH > $CURSTACK
-
 	[[ -s ${FOCUS} ]] && {
 		echo $((SCRW/2 - DFW/2)) $((SCRH/2 - GAP/2 - DFH)) $DFW $DFH > $CURFOCUS
 		echo $((SCRW/2 - DSW/2)) $((SCRH/2 + GAP/2)) $DSW $DSH > $CURSTACK
 	}
-
 	[[ -s ${MAJOR} ]] && {
 		echo $DWX $DWY $DMW $DMH > $CURMAJOR
 		echo $((DWX + DMW + GAP)) $DWY $DSW $DSH > $CURSTACK

@@ -30,6 +30,6 @@ esac
 wid=$(\
 	for wid in $(lsw); do
 		printf '%s\n' "$wid | $(wname $wid)"
-	done | i3menu -p "Window:" | cut -d\  -f 1)
+	done | i3menu --prompt "Window:" | cut -d\  -f 1)
 
 [[ -n "$wid" ]] && gwmfocus "$wid"

@@ -1,9 +1,9 @@
 TOPPAD=30
-LEFTPAD=100
-RIGHTPAD=100
-BOTTOMPAD=0
+LEFTPAD=200
+RIGHTPAD=30
+BOTTOMPAD=30
 BORDER=4
-GAP=20
+GAP=8
 FSFL=/home/gavarch/.config/gwm/fullscreen
 SBARSTACK=/home/gavarch/.config/gwm/SBS
 SBARFOCUS=/home/gavarch/.config/gwm/SBF

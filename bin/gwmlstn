@@ -36,11 +36,11 @@ while IFS=: read ev wid; do
 #			small delay to allow lsw to register window
 			sleep 0.1
 			lsw | grep -q "$wid" && {
-				[[ $(gwmdeet -c $wid) == "Dunst" ]] || {
-					echo $wid $(gwmtest $wid)
-					gwmsbar --$(gwmtest $wid) "$wid"
-					gwmfocus "$wid"
-					}
+				[[ $(gwmdeet -c $wid) == "Dunst" ]] && \
+					chwso -r $wid || {
+						gwmsbar --$(gwmtest $wid) "$wid"
+						gwmfocus "$wid"
+						}
 				}
 			;;
 
@@ -61,7 +61,7 @@ while IFS=: read ev wid; do
 
 ##		Focus windows when the mouse cursor enter them
 #		ENTER)
-#			wattr o ${wid} || {
+#			wattr o ${wid} || { #
 #				chwb -s $(gwmget BORDER) ${wid}
 #				lsw | grep -v "${wid}" | xargs -I {} chwb -s 0 "{}"
 #				}

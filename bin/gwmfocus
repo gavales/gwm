@@ -36,7 +36,6 @@ setborder() {
 	esac
 }
 
-
 while true; do
 	case $1 in
 		mouse) WID=$(gwmunder)                                ;;
